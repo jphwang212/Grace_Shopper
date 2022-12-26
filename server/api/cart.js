@@ -24,6 +24,7 @@ router.get('/auth', requireToken, async (req, res, next) => {
         isCart: true,
       },
     });
+    console.log('Printing cart: ', cart);
     res.json(cart);
   } catch (err) {
     next(err);

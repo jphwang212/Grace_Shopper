@@ -1,14 +1,14 @@
-import axios from "axios";
-import { conformCart } from "../components/helpfunctions/conformCart";
+import axios from 'axios';
+import { conformCart } from '../components/helpfunctions/conformCart';
 /**
  * ACTION TYPES
  */
-const FETCH_CART = "FETCH_CART";
-const ADD_TO_CART = "ADD_TO_CART";
-const CLEAR_CART = "CLEAR_CART";
-const ORDER_HISTORY = "ORDER_HISTORY";
-const CHECKOUT = "CHECKOUT";
-const DELETE_ITEM = "DELETE_ITEM";
+const FETCH_CART = 'FETCH_CART';
+const ADD_TO_CART = 'ADD_TO_CART';
+const CLEAR_CART = 'CLEAR_CART';
+const ORDER_HISTORY = 'ORDER_HISTORY';
+const CHECKOUT = 'CHECKOUT';
+const DELETE_ITEM = 'DELETE_ITEM';
 
 /**
  * ACTION CREATORS
@@ -49,8 +49,8 @@ const _checkOut = () => ({
 
 export const cartQuantity = (itemId, inputQty) => {
   return async (dispatch) => {
-    const token = window.localStorage.getItem("token");
-    const localCart = window.localStorage.getItem("cart");
+    const token = window.localStorage.getItem('token');
+    const localCart = window.localStorage.getItem('cart');
     try {
       if (token) {
         const config = {
@@ -64,7 +64,7 @@ export const cartQuantity = (itemId, inputQty) => {
           return;
         }
         const newQuantity = { productId: itemId, quantity: inputQty };
-        const { data } = await axios.put("/api/cart/auth", newQuantity, config);
+        const { data } = await axios.put('/api/cart/auth', newQuantity, config);
         dispatch(_fetchCart(data[1].dataValues));
       } else {
         const data = JSON.parse(localCart);
@@ -84,7 +84,7 @@ export const cartQuantity = (itemId, inputQty) => {
         }
       }
     } catch (error) {
-      console.log("Unable to change quantity");
+      console.log('Unable to change quantity');
       console.error(error);
     }
   };
@@ -92,7 +92,7 @@ export const cartQuantity = (itemId, inputQty) => {
 
 export const fetchCart = () => {
   return async (dispatch) => {
-    const token = window.localStorage.getItem("token");
+    const token = window.localStorage.getItem('token');
     try {
       if (token) {
         const config = {
@@ -100,11 +100,11 @@ export const fetchCart = () => {
             authorization: token,
           },
         };
-        const { data } = await axios.get("/api/cart/auth", config);
+        const { data } = await axios.get('/api/cart/auth', config);
         dispatch(_fetchCart(data));
       }
     } catch (err) {
-      console.log("Unable to fetch cart");
+      console.log('Unable to fetch cart');
       console.error(err);
     }
   };
@@ -112,7 +112,7 @@ export const fetchCart = () => {
 
 export const orderHistory = () => {
   return async (dispatch) => {
-    const token = window.localStorage.getItem("token");
+    const token = window.localStorage.getItem('token');
 
     try {
       if (token) {
@@ -121,10 +121,10 @@ export const orderHistory = () => {
             authorization: token,
           },
         };
-        const { data } = await axios.get("");
+        const { data } = await axios.get('');
       }
     } catch (err) {
-      console.log("No order hstory.");
+      console.log('No order hstory.');
       console.error(err);
     }
   };
@@ -132,7 +132,7 @@ export const orderHistory = () => {
 
 export const addToCart = (product) => {
   return async (dispatch) => {
-    const token = window.localStorage.getItem("token");
+    const token = window.localStorage.getItem('token');
     try {
       if (token) {
         const config = {
@@ -148,15 +148,15 @@ export const addToCart = (product) => {
         dispatch(_addToCart(data));
       } else {
         const existingCart =
-          JSON.parse(window.localStorage.getItem("cart")) || [];
+          JSON.parse(window.localStorage.getItem('cart')) || [];
         window.localStorage.setItem(
-          "cart",
+          'cart',
           JSON.stringify([...existingCart, product])
         );
         dispatch(_addToCart(product));
       }
     } catch (err) {
-      console.log("Unable to add to cart");
+      console.log('Unable to add to cart');
       console.error(err);
     }
   };
@@ -164,7 +164,7 @@ export const addToCart = (product) => {
 
 export const deleteItem = (id) => {
   return async (dispatch) => {
-    const token = window.localStorage.getItem("token");
+    const token = window.localStorage.getItem('token');
     if (token) {
       const config = {
         headers: {
@@ -174,32 +174,32 @@ export const deleteItem = (id) => {
           productId: id,
         },
       };
-      const updatedCart = await axios.delete("/api/cart/auth", config);
+      const updatedCart = await axios.delete('/api/cart/auth', config);
       dispatch(_deleteItem(updatedCart));
     } else {
       const existingCart =
-        JSON.parse(window.localStorage.getItem("cart")) || [];
-      console.log("Printing updated cart: ", existingCart);
+        JSON.parse(window.localStorage.getItem('cart')) || [];
+      console.log('Printing updated cart: ', existingCart);
       const newCart = existingCart.reduce((accumulator, currentValue) => {
         if (currentValue.id !== id) {
           return [...accumulator, currentValue];
         } else return accumulator;
       }, []);
-      window.localStorage.setItem("cart", JSON.stringify(newCart));
+      window.localStorage.setItem('cart', JSON.stringify(newCart));
     }
   };
 };
 
 export const checkOut = () => {
   return async (dispatch) => {
-    const token = window.localStorage.getItem("token");
+    const token = window.localStorage.getItem('token');
     if (token) {
       const config = {
         headers: {
           authorization: token,
         },
       };
-      await axios.put("/api/checkout", {}, config);
+      await axios.put('/api/checkout', {}, config);
       dispatch(_fetchCart());
     }
   };
@@ -207,17 +207,17 @@ export const checkOut = () => {
 
 export const clearCart = () => {
   return async (dispatch) => {
-    const token = window.localStorage.getItem("token");
+    const token = window.localStorage.getItem('token');
     if (token) {
       const config = {
         headers: {
           authorization: token,
         },
       };
-      await axios.delete("/api/cart/auth/all", config);
+      await axios.delete('/api/cart/auth/all', config);
       dispatch(_clearCart());
     }
-    window.localStorage.removeItem("cart");
+    window.localStorage.removeItem('cart');
     dispatch(_clearCart());
   };
 };
@@ -230,7 +230,7 @@ export default function (state = [], action) {
   switch (action.type) {
     case FETCH_CART:
       if (!action.cart) {
-        return [...state];
+        return state;
       }
       return action.cart;
     case ADD_TO_CART:
@@ -238,7 +238,7 @@ export default function (state = [], action) {
     case CLEAR_CART:
       return [];
     case DELETE_ITEM:
-      return [action.updatedCart];
+      return action.updatedCart;
     default:
       return state;
   }
