@@ -1,7 +1,7 @@
-const router = require("express").Router();
+const router = require('express').Router();
 const {
   models: { Order, User, OrderProduct, Product },
-} = require("../db");
+} = require('../db');
 module.exports = router;
 
 const requireToken = async (req, res, next) => {
@@ -16,22 +16,22 @@ const requireToken = async (req, res, next) => {
 };
 
 // GET /api/cart/auth
-router.get("/auth", requireToken, async (req, res, next) => {
+router.get('/auth', requireToken, async (req, res, next) => {
   try {
-    const [cart] = await Order.findAll({
+    const cart = await Order.findAll({
       where: {
         userId: req.user.id,
         isCart: true,
       },
     });
-    res.json(await cart.getProducts());
+    res.json(cart);
   } catch (err) {
     next(err);
   }
 });
 
 // PUT /api/cart/auth
-router.put("/auth", requireToken, async (req, res, next) => {
+router.put('/auth', requireToken, async (req, res, next) => {
   try {
     const order = await Order.findOne({
       where: {
@@ -39,7 +39,7 @@ router.put("/auth", requireToken, async (req, res, next) => {
       },
     });
     const product = await Product.findByPk(req.body.productId);
-    console.log("product information", product);
+    console.log('product information', product);
     const changeQuantity = await OrderProduct.update(
       {
         quantity: req.body.quantity,
@@ -50,7 +50,7 @@ router.put("/auth", requireToken, async (req, res, next) => {
         plain: true,
       }
     );
-    console.log("api cart", changeQuantity);
+    console.log('api cart', changeQuantity);
     res.json(changeQuantity);
   } catch (err) {
     console.error(err);
@@ -59,7 +59,7 @@ router.put("/auth", requireToken, async (req, res, next) => {
 });
 
 // DELETE /api/cart/auth
-router.delete("/auth", requireToken, async (req, res, next) => {
+router.delete('/auth', requireToken, async (req, res, next) => {
   try {
     const product = await Product.findOne({
       where: {
@@ -79,7 +79,7 @@ router.delete("/auth", requireToken, async (req, res, next) => {
 });
 
 // DELETE /api/cart/auth/all
-router.delete("/auth/all", requireToken, async (req, res, next) => {
+router.delete('/auth/all', requireToken, async (req, res, next) => {
   try {
     const order = await Order.findOne({
       where: {
