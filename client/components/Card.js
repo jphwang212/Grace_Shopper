@@ -9,7 +9,7 @@ const Card = (props) => {
   const { auth } = useSelector((state) => state);
   const dispatch = useDispatch();
   return (
-    <div data-aos="zoom-in" data-aos-duration="1500">
+    <div data-aos="zoom-in" data-aos-duration="1600">
       <div className="card">
         <div>
           <div>
