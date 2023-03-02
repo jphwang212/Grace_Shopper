@@ -68,7 +68,7 @@ const Cart = (props) => {
               value={qty[item.id] || item.orderProducts?.quantity}
             />
             <h4 id='invisible'>
-              {(totalPrice += item.price * item.orderProducts?.quantity)}
+              {(totalPrice += item.price * item.orderProducts?.quantity) || 0}
             </h4>
             <FaTrash
               onClick={(e, id = item.id) => {
